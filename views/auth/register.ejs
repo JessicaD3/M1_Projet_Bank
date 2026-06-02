@@ -1,0 +1,161 @@
+<div class="row justify-content-center">
+  <div class="col-md-7 col-lg-6">
+    <div class="card shadow border-0">
+      <div class="card-body p-4 p-md-5">
+
+        <!-- En-tête -->
+        <div class="text-center mb-4">
+          <img src="/img/ourbank-logo.svg" alt="Our Bank" style="height:52px;" class="mb-3" />
+          <h2 class="fw-bold mb-1">Créer un compte</h2>
+          <p class="text-muted small mb-0">Rejoignez Our Bank en quelques secondes</p>
+        </div>
+
+        <form action="/register" method="POST" novalidate id="form-register">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Nom</label>
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-person text-muted"></i></span>
+                <input type="text" name="nom" id="f-nom"
+                  class="form-control border-start-0 ps-0 <%= fieldErrors.nom ? 'is-invalid' : '' %>"
+                  value="<%= old.nom || '' %>" />
+                <div class="invalid-feedback"><%= fieldErrors.nom || 'Le nom est requis.' %></div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Prénom</label>
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-person text-muted"></i></span>
+                <input type="text" name="prenom" id="f-prenom"
+                  class="form-control border-start-0 ps-0 <%= fieldErrors.prenom ? 'is-invalid' : '' %>"
+                  value="<%= old.prenom || '' %>" />
+                <div class="invalid-feedback"><%= fieldErrors.prenom || 'Le prénom est requis.' %></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="bi bi-envelope text-muted"></i></span>
+              <input type="email" name="email" id="f-email"
+                class="form-control border-start-0 ps-0 <%= fieldErrors.email ? 'is-invalid' : '' %>"
+                value="<%= old.email || '' %>" placeholder="vous@exemple.fr" />
+              <div class="invalid-feedback"><%= fieldErrors.email || 'Email invalide.' %></div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Téléphone</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="bi bi-telephone text-muted"></i></span>
+              <input type="text" name="telephone" id="f-telephone"
+                class="form-control border-start-0 ps-0 <%= fieldErrors.telephone ? 'is-invalid' : '' %>"
+                value="<%= old.telephone || '' %>" placeholder="10 chiffres" />
+              <div class="invalid-feedback"><%= fieldErrors.telephone || 'Le téléphone doit contenir 10 chiffres.' %></div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Adresse <span class="text-muted small fw-normal">(optionnel)</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="bi bi-geo-alt text-muted"></i></span>
+              <input type="text" name="adresse" class="form-control border-start-0 ps-0" value="<%= old.adresse || '' %>" />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Date de naissance <span class="text-muted small fw-normal">(optionnel)</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar3 text-muted"></i></span>
+              <input type="date" name="date_naissance" class="form-control border-start-0 ps-0" value="<%= old.date_naissance || '' %>" />
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Mot de passe</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="bi bi-lock text-muted"></i></span>
+              <input type="password" name="password" id="f-password"
+                class="form-control border-start-0 border-end-0 ps-0 <%= fieldErrors.password ? 'is-invalid' : '' %>" />
+              <button class="btn btn-outline-secondary border-start-0" type="button" id="toggle-password" tabindex="-1">
+                <i class="bi bi-eye" id="icone-oeil"></i>
+              </button>
+              <div class="invalid-feedback"><%= fieldErrors.password || 'Mot de passe invalide.' %></div>
+            </div>
+          </div>
+
+          <!-- Critères du mot de passe (live) -->
+          <ul class="list-unstyled small mb-4 mt-2" id="criteres">
+            <li id="c-longueur" class="text-muted mb-1"><i class="bi bi-circle"></i> Au moins 8 caractères</li>
+            <li id="c-majuscule" class="text-muted mb-1"><i class="bi bi-circle"></i> Une majuscule</li>
+            <li id="c-chiffre" class="text-muted"><i class="bi bi-circle"></i> Un chiffre</li>
+          </ul>
+
+          <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+            <i class="bi bi-shield-check me-1"></i> Créer mon compte
+          </button>
+        </form>
+
+        <hr class="my-4" />
+
+        <p class="text-center mb-0 small">
+          Déjà client ?
+          <a href="/login" class="text-decoration-none fw-semibold">Se connecter</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- Afficher / masquer le mot de passe ---
+  const champPwd = document.getElementById('f-password');
+  const btnToggle = document.getElementById('toggle-password');
+  const icone = document.getElementById('icone-oeil');
+  btnToggle.addEventListener('click', () => {
+    const visible = champPwd.type === 'text';
+    champPwd.type = visible ? 'password' : 'text';
+    icone.className = visible ? 'bi bi-eye' : 'bi bi-eye-slash';
+  });
+
+  // --- Validation en temps réel ---
+  function marquer(champ, valide) {
+    if (!champ.value) {
+      champ.classList.remove('is-valid', 'is-invalid');
+      return;
+    }
+    champ.classList.toggle('is-valid', valide);
+    champ.classList.toggle('is-invalid', !valide);
+  }
+
+  const fNom = document.getElementById('f-nom');
+  const fPrenom = document.getElementById('f-prenom');
+  const fEmail = document.getElementById('f-email');
+  const fTel = document.getElementById('f-telephone');
+
+  fNom.addEventListener('input', () => marquer(fNom, fNom.value.trim().length > 0));
+  fPrenom.addEventListener('input', () => marquer(fPrenom, fPrenom.value.trim().length > 0));
+  fEmail.addEventListener('input', () => marquer(fEmail, /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fEmail.value.trim())));
+  fTel.addEventListener('input', () => marquer(fTel, /^[0-9]{10}$/.test(fTel.value.trim())));
+
+  // --- Critères du mot de passe ---
+  function majCritere(id, ok) {
+    const li = document.getElementById(id);
+    li.className = ok ? 'text-success mb-1' : 'text-muted mb-1';
+    li.querySelector('i').className = ok ? 'bi bi-check-circle-fill' : 'bi bi-circle';
+  }
+
+  champPwd.addEventListener('input', () => {
+    const v = champPwd.value;
+    const okLong = v.length >= 8;
+    const okMaj = /[A-Z]/.test(v);
+    const okChiffre = /[0-9]/.test(v);
+    majCritere('c-longueur', okLong);
+    majCritere('c-majuscule', okMaj);
+    majCritere('c-chiffre', okChiffre);
+    marquer(champPwd, okLong && okMaj && okChiffre);
+  });
+</script>

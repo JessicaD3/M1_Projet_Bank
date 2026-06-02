@@ -1,0 +1,43 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Our Bank">
+  <defs>
+    <linearGradient id="obGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+    <linearGradient id="obShine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="55%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Écu / bouclier : confiance + sécurité bancaire -->
+  <path d="M100 18
+           L168 44
+           V104
+           C168 146 138 174 100 186
+           C62 174 32 146 32 104
+           V44
+           Z"
+        fill="url(#obGrad)"/>
+  <!-- Reflet supérieur -->
+  <path d="M100 18
+           L168 44
+           V104
+           C168 146 138 174 100 186
+           C62 174 32 146 32 104
+           V44
+           Z"
+        fill="url(#obShine)"/>
+
+  <!-- Colonnes façade de banque (temple/colonnade) -->
+  <g fill="#ffffff">
+    <!-- fronton -->
+    <path d="M62 78 L100 60 L138 78 Z"/>
+    <!-- base -->
+    <rect x="60" y="128" width="80" height="9" rx="2"/>
+    <!-- 3 colonnes -->
+    <rect x="69" y="86" width="10" height="40" rx="2"/>
+    <rect x="95" y="86" width="10" height="40" rx="2"/>
+    <rect x="121" y="86" width="10" height="40" rx="2"/>
+  </g>
+</svg>

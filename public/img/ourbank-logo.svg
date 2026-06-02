@@ -1,0 +1,25 @@
+<svg width="420" height="120" viewBox="0 0 420 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Our Bank">
+  <defs>
+    <linearGradient id="obGrad2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Icône -->
+  <g transform="translate(8,8) scale(0.52)">
+    <path d="M100 18 L168 44 V104 C168 146 138 174 100 186 C62 174 32 146 32 104 V44 Z" fill="url(#obGrad2)"/>
+    <g fill="#ffffff">
+      <path d="M62 78 L100 60 L138 78 Z"/>
+      <rect x="60" y="128" width="80" height="9" rx="2"/>
+      <rect x="69" y="86" width="10" height="40" rx="2"/>
+      <rect x="95" y="86" width="10" height="40" rx="2"/>
+      <rect x="121" y="86" width="10" height="40" rx="2"/>
+    </g>
+  </g>
+
+  <!-- Texte -->
+  <text x="125" y="58" font-family="'Inter','Segoe UI',sans-serif" font-size="38" font-weight="800" letter-spacing="-1.5" fill="#0f1729">Our</text>
+  <text x="200" y="58" font-family="'Inter','Segoe UI',sans-serif" font-size="38" font-weight="800" letter-spacing="-1.5" fill="#059669">Bank</text>
+  <text x="126" y="84" font-family="'Inter','Segoe UI',sans-serif" font-size="13" font-weight="500" letter-spacing="3" fill="#64748b">BANQUE EN LIGNE</text>
+</svg>

@@ -1,0 +1,75 @@
+<div class="row justify-content-center">
+  <div class="col-md-5 col-lg-4">
+    <div class="card shadow border-0" style="background: linear-gradient(160deg,#0a0f1e,#1c2536); overflow:hidden;">
+      <div class="card-body p-4 p-md-5 text-white position-relative">
+
+        <!-- Halo décoratif -->
+        <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,0.18),transparent 70%);pointer-events:none;"></div>
+
+        <!-- En-tête -->
+        <div class="text-center mb-4 position-relative">
+        <img src="/img/ourbank-icon.svg" alt="Our Bank" style="height:56px;" class="mb-3" />
+        <h2 class="fw-bold mb-1 text-white">Espace administrateur</h2>
+        <p class="small mb-0" style="color:#94a3b8;">
+          <i class="bi bi-shield-lock-fill text-success"></i> Accès réservé et sécurisé
+        </p>
+      </div>
+
+        <form action="/admin/login" method="POST" class="position-relative">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-white">Email administrateur</label>
+            <div class="input-group">
+              <span class="input-group-text border-0" style="background:rgba(255,255,255,0.08);color:#94a3b8;">
+                <i class="bi bi-envelope"></i>
+              </span>
+              <input type="email" name="email"
+                class="form-control border-0"
+                style="background:rgba(255,255,255,0.08);color:#fff;"
+                placeholder="admin@ourbank.fr" required autofocus />
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-semibold text-white">Mot de passe</label>
+            <div class="input-group">
+              <span class="input-group-text border-0" style="background:rgba(255,255,255,0.08);color:#94a3b8;">
+                <i class="bi bi-lock"></i>
+              </span>
+              <input type="password" name="password" id="admin-password"
+                class="form-control border-0"
+                style="background:rgba(255,255,255,0.08);color:#fff;"
+                placeholder="••••••••" required />
+              <button class="btn border-0" type="button" id="toggle-admin-pwd" tabindex="-1"
+                style="background:rgba(255,255,255,0.08);color:#94a3b8;">
+                <i class="bi bi-eye" id="icone-admin"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+            <i class="bi bi-box-arrow-in-right me-1"></i> Connexion administrateur
+          </button>
+        </form>
+
+        <div class="text-center mt-4 position-relative">
+          <a href="/login" class="text-decoration-none small" style="color:#94a3b8;">
+            <i class="bi bi-arrow-left"></i> Retour à l'espace client
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const champAdmin = document.getElementById('admin-password');
+  const btnAdmin = document.getElementById('toggle-admin-pwd');
+  const icAdmin = document.getElementById('icone-admin');
+  btnAdmin.addEventListener('click', () => {
+    const visible = champAdmin.type === 'text';
+    champAdmin.type = visible ? 'password' : 'text';
+    icAdmin.className = visible ? 'bi bi-eye' : 'bi bi-eye-slash';
+  });
+</script>

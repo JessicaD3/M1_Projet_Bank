@@ -1,0 +1,8 @@
+<div class="text-center py-5">
+  <h1 class="display-5 fw-bold">Bienvenue chez Our Bank</h1>
+  <p class="lead text-muted">Gérez vos comptes bancaires en ligne, en toute simplicité.</p>
+  <% if (!currentUser) { %>
+    <a href="/register" class="btn btn-primary btn-lg mt-3">Ouvrir un compte</a>
+    <a href="/login" class="btn btn-outline-primary btn-lg mt-3">Se connecter</a>
+  <% } %>
+</div>

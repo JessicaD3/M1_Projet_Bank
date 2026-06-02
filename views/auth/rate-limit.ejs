@@ -1,0 +1,20 @@
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm border-warning text-center">
+      <div class="card-body py-5">
+        <div class="display-1 mb-3">🔒</div>
+        <h2 class="card-title">Trop de tentatives</h2>
+        <p class="text-muted mb-4">
+          Pour des raisons de sécurité, votre accès à la connexion est temporairement
+          suspendu après plusieurs tentatives échouées.
+        </p>
+        <div class="alert alert-warning d-inline-block">
+          Veuillez réessayer dans <strong><%= minutes %> minutes</strong>.
+        </div>
+        <div class="mt-4">
+          <a href="/" class="btn btn-outline-primary">Retour à l'accueil</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

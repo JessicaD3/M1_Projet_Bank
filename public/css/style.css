@@ -1,0 +1,277 @@
+/* ============================================================
+   OUR BANK — Design System « Émeraude Nuit »
+   Identité premium signature — v1.0
+   ============================================================ */
+
+:root {
+  /* === Palette signature === */
+  --ob-emerald:       #10b981;
+  --ob-emerald-deep:  #059669;
+  --ob-emerald-dark:  #047857;
+  --ob-emerald-glow:  rgba(16, 185, 129, 0.35);
+
+  --ob-night:         #0a0f1e;   /* nuit profonde */
+  --ob-night-2:       #111827;
+  --ob-night-3:       #1c2536;
+
+  --ob-mist:          #f4f7f6;   /* fond général */
+  --ob-surface:       #ffffff;
+  --ob-ink:           #0f1729;   /* texte principal */
+  --ob-ink-soft:      #64748b;   /* texte secondaire */
+  --ob-line:          #e8eef0;   /* bordures */
+
+  --ob-gold:          #f5b841;   /* accent premium ponctuel */
+
+  /* === Surcharge Bootstrap === */
+  --bs-primary: var(--ob-emerald-deep);
+  --bs-primary-rgb: 5, 150, 105;
+  --bs-link-color: var(--ob-emerald-dark);
+  --bs-link-hover-color: var(--ob-emerald);
+  --bs-body-bg: var(--ob-mist);
+  --bs-body-color: var(--ob-ink);
+  --bs-border-radius: 0.85rem;
+  --bs-body-font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ============================================================
+   FOND : dégradé maillé subtil (signature visuelle)
+   ============================================================ */
+body {
+  background-color: var(--ob-mist);
+  background-image:
+    radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.06) 0px, transparent 50%),
+    radial-gradient(at 98% 2%, rgba(5, 150, 105, 0.05) 0px, transparent 45%);
+  background-attachment: fixed;
+  font-family: var(--bs-body-font-family);
+  color: var(--ob-ink);
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.01em;
+}
+
+/* ============================================================
+   NAVBAR : nuit profonde + effet verre
+   ============================================================ */
+.navbar.bg-primary {
+  background: rgba(10, 15, 30, 0.92) !important;
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.15);
+  box-shadow: 0 4px 30px rgba(10, 15, 30, 0.12);
+}
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #fff 30%, var(--ob-emerald) 120%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.navbar .btn-light {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  backdrop-filter: blur(4px);
+}
+.navbar .btn-light:hover {
+  background: var(--ob-emerald-deep);
+  border-color: var(--ob-emerald-deep);
+  color: #fff;
+}
+.navbar .btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ============================================================
+   CARTES : profondeur douce + survol vivant
+   ============================================================ */
+.card {
+  border: 1px solid var(--ob-line);
+  border-radius: 1.1rem;
+  background: var(--ob-surface);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 41, 0.04),
+    0 4px 16px rgba(15, 23, 41, 0.04);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s ease;
+}
+.card.shadow-sm:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 8px 24px rgba(15, 23, 41, 0.08),
+    0 2px 8px rgba(16, 185, 129, 0.06);
+}
+
+/* Carte « hero » solde : vraie carte bancaire */
+.card[style*="gradient"] {
+  background:
+    radial-gradient(circle at 85% 15%, rgba(255,255,255,0.12) 0%, transparent 40%),
+    linear-gradient(135deg, var(--ob-emerald-deep) 0%, var(--ob-night-3) 95%) !important;
+  border: none !important;
+  border-radius: 1.4rem !important;
+  box-shadow: 0 12px 40px rgba(5, 150, 105, 0.25) !important;
+  position: relative;
+  overflow: hidden;
+}
+.card[style*="gradient"]::after {
+  content: "";
+  position: absolute;
+  top: -50%; right: -10%;
+  width: 60%; height: 200%;
+  background: radial-gradient(circle, rgba(245,184,65,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ============================================================
+   BOUTONS : présence affirmée
+   ============================================================ */
+.btn {
+  border-radius: 0.7rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  padding: 0.55rem 1.25rem;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--ob-emerald) 0%, var(--ob-emerald-deep) 100%);
+  border: none;
+  box-shadow: 0 4px 14px var(--ob-emerald-glow);
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  background: linear-gradient(135deg, var(--ob-emerald-deep) 0%, var(--ob-emerald-dark) 100%);
+  box-shadow: 0 6px 20px var(--ob-emerald-glow);
+  transform: translateY(-1px);
+}
+.btn-outline-primary {
+  color: var(--ob-emerald-dark);
+  border: 1.5px solid var(--ob-emerald);
+}
+.btn-outline-primary:hover {
+  background: var(--ob-emerald-deep);
+  border-color: var(--ob-emerald-deep);
+}
+.btn-success { background: linear-gradient(135deg, var(--ob-emerald), var(--ob-emerald-deep)); border: none; }
+.btn-light.border {
+  background: var(--ob-surface);
+  border: 1px solid var(--ob-line) !important;
+  color: var(--ob-ink);
+}
+.btn-light.border:hover { background: var(--ob-mist); border-color: var(--ob-emerald) !important; }
+
+/* ============================================================
+   UTILITAIRES COLORÉS surchargés
+   ============================================================ */
+.bg-primary { background: var(--ob-emerald-deep) !important; }
+.text-primary { color: var(--ob-emerald-dark) !important; }
+.bg-info { background: var(--ob-night-3) !important; }
+.bg-success { background: var(--ob-emerald-deep) !important; }
+.badge.bg-primary { background: var(--ob-emerald-deep) !important; }
+
+/* ============================================================
+   TABLEAUX : dashboard pro
+   ============================================================ */
+.table {
+  --bs-table-bg: var(--ob-surface);
+  border-radius: 1rem;
+  overflow: hidden;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.table thead.table-light th {
+  background: var(--ob-mist);
+  color: var(--ob-ink-soft);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--ob-line);
+  padding: 0.9rem 1rem;
+}
+.table tbody td { padding: 0.85rem 1rem; border-color: var(--ob-line); }
+.table-hover tbody tr { transition: background 0.15s ease; }
+.table-hover tbody tr:hover { background: rgba(16, 185, 129, 0.04); }
+
+/* ============================================================
+   FORMULAIRES : focus émeraude soigné
+   ============================================================ */
+.form-control, .form-select {
+  border-radius: 0.7rem;
+  border: 1.5px solid var(--ob-line);
+  padding: 0.65rem 0.9rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--ob-emerald);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+}
+.form-label { font-weight: 600; font-size: 0.875rem; color: var(--ob-ink); margin-bottom: 0.35rem; }
+.input-group-text { border-radius: 0.7rem; border: 1.5px solid var(--ob-line); }
+.form-control.is-valid { border-color: var(--ob-emerald); }
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.badge {
+  font-weight: 600;
+  padding: 0.4em 0.75em;
+  border-radius: 0.55rem;
+  letter-spacing: 0.01em;
+}
+
+/* ============================================================
+   LIENS
+   ============================================================ */
+a { color: var(--ob-emerald-dark); text-underline-offset: 3px; }
+a:hover { color: var(--ob-emerald); }
+
+/* ============================================================
+   TYPOGRAPHIE
+   ============================================================ */
+h1, h2, h3, h4, h5 { font-weight: 700; letter-spacing: -0.025em; color: var(--ob-ink); }
+.display-5, .display-6 { font-weight: 800; letter-spacing: -0.04em; }
+.font-monospace { font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace; letter-spacing: -0.02em; }
+
+/* ============================================================
+   ALERTES (toasts SweetAlert hérités)
+   ============================================================ */
+.alert { border: none; border-radius: 0.85rem; }
+.alert-warning { background: #fef6e7; color: #92600a; }
+.alert-info { background: #eafaf6; color: var(--ob-emerald-dark); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  color: var(--ob-ink-soft) !important;
+  border-top: 1px solid var(--ob-line) !important;
+}
+
+/* ============================================================
+   DÉTAIL : barre d'accent émeraude sur les cartes-action
+   ============================================================ */
+.card-title.text-success,
+.card-title.text-danger,
+.card-title.text-primary { font-weight: 700; letter-spacing: -0.02em; }
+
+/* ============================================================
+   AVATAR À INITIALES (listes admin)
+   ============================================================ */
+.avatar-init {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 0.85rem;
+}
+.avatar-lg {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  font-size: 1.3rem;
+}
+
+/* Scrollbar discrète assortie */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #cbd5d8; border-radius: 10px; border: 2px solid var(--ob-mist); }
+::-webkit-scrollbar-thumb:hover { background: var(--ob-emerald); }

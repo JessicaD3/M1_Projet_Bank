@@ -1,0 +1,145 @@
+<!-- En-tête -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <p class="text-muted small mb-1">Administration</p>
+    <h2 class="mb-0 fw-bold">Tableau de bord</h2>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="/admin/clients" class="btn btn-primary"><i class="bi bi-people"></i> Clients</a>
+    <a href="/admin/comptes" class="btn btn-light border shadow-sm"><i class="bi bi-credit-card"></i> Comptes</a>
+  </div>
+</div>
+
+<!-- Statistiques -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center justify-content-center flex-shrink-0"
+             style="width:54px;height:54px;border-radius:0.85rem;background:rgba(16,185,129,0.12);">
+          <i class="bi bi-people-fill text-success fs-4"></i>
+        </div>
+        <div>
+          <p class="text-muted small mb-1">Clients actifs</p>
+          <h3 class="mb-0 fw-bold"><%= stats.nbClients %></h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center justify-content-center flex-shrink-0"
+             style="width:54px;height:54px;border-radius:0.85rem;background:rgba(28,37,54,0.08);">
+          <i class="bi bi-credit-card-2-front-fill fs-4" style="color:#1c2536;"></i>
+        </div>
+        <div>
+          <p class="text-muted small mb-1">Comptes bancaires</p>
+          <h3 class="mb-0 fw-bold"><%= stats.nbComptes %></h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100" style="background: linear-gradient(135deg,#059669,#1c2536);">
+      <div class="card-body d-flex align-items-center gap-3 text-white">
+        <div class="d-flex align-items-center justify-content-center flex-shrink-0"
+             style="width:54px;height:54px;border-radius:0.85rem;background:rgba(255,255,255,0.15);">
+          <i class="bi bi-graph-up-arrow fs-4"></i>
+        </div>
+        <div>
+          <p class="small opacity-75 mb-1">Total des dépôts</p>
+          <h3 class="mb-0 fw-bold"><%= fmt.formaterMontant(stats.totalDepots) %></h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Graphiques -->
+<div class="row g-3 mb-4">
+  <div class="col-lg-5">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="card-title fw-bold mb-1">Répartition des comptes</h6>
+        <p class="text-muted small mb-3">Par type de compte</p>
+        <canvas id="chartComptes"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="card-title fw-bold mb-1">Activité des transactions</h6>
+        <p class="text-muted small mb-3">Nombre par type d'opération</p>
+        <canvas id="chartTransactions"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="chart-data"
+  data-comptes="<%= encodeURIComponent(JSON.stringify(comptesParType)) %>"
+  data-transactions="<%= encodeURIComponent(JSON.stringify(txParType)) %>"
+  hidden></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const el = document.getElementById('chart-data');
+    const comptes = JSON.parse(decodeURIComponent(el.dataset.comptes));
+    const transactions = JSON.parse(decodeURIComponent(el.dataset.transactions));
+
+    const labelsCompte = { courant: 'Compte courant', livret_a: 'Livret A', pel: 'PEL' };
+    const labelsTx = {
+      depot: 'Dépôts', retrait: 'Retraits',
+      virement_emis: 'Virements émis', virement_recu: 'Virements reçus'
+    };
+
+    // Palette assortie au thème Émeraude Nuit
+    const paletteCompte = ['#059669', '#10b981', '#f5b841'];
+    const couleurEmeraude = '#059669';
+
+    Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+    Chart.defaults.color = '#64748b';
+
+    new Chart(document.getElementById('chartComptes'), {
+      type: 'doughnut',
+      data: {
+        labels: comptes.map(c => labelsCompte[c.type_compte] || c.type_compte),
+        datasets: [{
+          data: comptes.map(c => c.nb),
+          backgroundColor: paletteCompte,
+          borderWidth: 2,
+          borderColor: '#ffffff',
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: '65%',
+        plugins: { legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true } } }
+      }
+    });
+
+    new Chart(document.getElementById('chartTransactions'), {
+      type: 'bar',
+      data: {
+        labels: transactions.map(t => labelsTx[t.type_transaction] || t.type_transaction),
+        datasets: [{
+          label: 'Nombre',
+          data: transactions.map(t => t.nb),
+          backgroundColor: couleurEmeraude,
+          borderRadius: 8,
+          maxBarThickness: 60,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#eef2f1' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  });
+</script>

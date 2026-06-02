@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <p class="text-muted small mb-1">Mon espace</p>
+    <h2 class="mb-0 fw-bold">Historique des transactions</h2>
+  </div>
+  <a href="/dashboard" class="btn btn-light border shadow-sm">
+    <i class="bi bi-arrow-left"></i> Tableau de bord
+  </a>
+</div>
+
+<% if (transactions.length === 0) { %>
+  <div class="card shadow-sm">
+    <div class="card-body text-center py-5">
+      <i class="bi bi-receipt text-muted" style="font-size:2.5rem;"></i>
+      <p class="text-muted mt-3 mb-0">Aucune transaction pour le moment.</p>
+    </div>
+  </div>
+<% } else { %>
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Compte</th>
+            <th>Détail</th>
+            <th class="text-end">Montant</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% transactions.forEach(function(t){ %>
+            <%
+              var estCredit = (t.type_transaction === 'depot' || t.type_transaction === 'virement_recu');
+              var ibanDest = (t.dest_actif == 0 || t.dest_actif === false) ? 'Compte clôturé' : t.dest_iban;
+              var ibanSource = (t.source_actif == 0 || t.source_actif === false) ? 'Compte clôturé' : t.source_iban;
+            %>
+            <tr>
+              <td class="small text-muted"><%= fmt.formaterDateHeure(t.date_transaction) %></td>
+              <td>
+                <span class="badge <%= estCredit ? 'bg-success' : 'bg-secondary' %>">
+                  <i class="bi <%= estCredit ? 'bi-arrow-down-left' : 'bi-arrow-up-right' %>"></i>
+                  <%= fmt.libelleTypeTransaction(t.type_transaction) %>
+                </span>
+              </td>
+              <td class="font-monospace small">
+                <%= estCredit ? (ibanDest || ibanSource) : ibanSource %>
+              </td>
+              <td class="small text-muted">
+                <%= t.libelle || '' %>
+                <% if (t.type_transaction === 'virement_emis') { %>
+                  <br><span class="font-monospace">→ <%= ibanDest %></span>
+                <% } else if (t.type_transaction === 'virement_recu') { %>
+                  <br><span class="font-monospace">← <%= ibanSource %></span>
+                <% } %>
+              </td>
+              <td class="text-end fw-bold <%= estCredit ? 'text-success' : 'text-danger' %>">
+                <%= estCredit ? '+' : '−' %><%= fmt.formaterMontant(t.montant) %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% } %>

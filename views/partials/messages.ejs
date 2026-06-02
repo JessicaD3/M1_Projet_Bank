@@ -1,0 +1,33 @@
+<%
+  var toasts = [];
+  if (success && success.length) success.forEach(function(m){ toasts.push({ icon: 'success', text: m }); });
+  if (error && error.length)     error.forEach(function(m){ toasts.push({ icon: 'error', text: m }); });
+%>
+<% if (toasts.length) { %>
+  <div id="flash-data" data-toasts="<%= encodeURIComponent(JSON.stringify(toasts)) %>" hidden></div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const el = document.getElementById('flash-data');
+      if (!el) return;
+      const messages = JSON.parse(decodeURIComponent(el.dataset.toasts));
+
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        }
+      });
+
+      messages.forEach(function (msg, i) {
+        setTimeout(function () {
+          Toast.fire({ icon: msg.icon, title: msg.text });
+        }, i * 300);
+      });
+    });
+  </script>
+<% } %>

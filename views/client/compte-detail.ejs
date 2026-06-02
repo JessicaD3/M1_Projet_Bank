@@ -1,0 +1,192 @@
+<div class="row justify-content-center">
+  <div class="col-md-9">
+<a href="/comptes" class="btn btn-light border shadow-sm mb-3">
+  <i class="bi bi-arrow-left"></i> Retour à mes comptes
+</a>
+    <!-- Carte solde principale -->
+    <div class="card shadow-sm mb-4 border-0" style="background: linear-gradient(135deg, #0d6efd, #0a58ca);">
+      <div class="card-body text-white p-4">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <span class="badge bg-light text-dark"><%= fmt.libelleTypeCompte(compte.type_compte) %></span>
+            <span class="badge <%= compte.statut === 'actif' ? 'bg-success' : 'bg-danger' %>"><%= compte.statut %></span>
+            <p class="font-monospace mt-3 mb-1 opacity-75"><%= compte.numero_compte %></p>
+            <p class="small opacity-75 mb-0">Ouvert le <%= fmt.formaterDate(compte.created_at) %></p>
+          </div>
+          <div class="text-end">
+            <p class="small opacity-75 mb-1">Solde disponible</p>
+            <h1 class="display-6 fw-bold mb-0"><%= fmt.formaterMontant(compte.solde) %></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if (compte.statut === 'bloque') { %>
+      <div class="alert alert-warning d-flex align-items-center">
+        <i class="bi bi-lock-fill me-2"></i>
+        Ce compte est bloqué. Aucune opération n'est possible.
+      </div>
+    <% } else { %>
+      <!-- Boutons d'opérations -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <button class="btn btn-success btn-lg w-100 py-3 shadow-sm" onclick="ouvrirDepot()">
+            <i class="bi bi-arrow-down-circle d-block fs-3 mb-1"></i>
+            Déposer
+          </button>
+        </div>
+        <div class="col-md-4">
+          <button class="btn btn-danger btn-lg w-100 py-3 shadow-sm" onclick="ouvrirRetrait()">
+            <i class="bi bi-arrow-up-circle d-block fs-3 mb-1"></i>
+            Retirer
+          </button>
+        </div>
+        <div class="col-md-4">
+          <button class="btn btn-primary btn-lg w-100 py-3 shadow-sm" onclick="ouvrirVirement()">
+            <i class="bi bi-send d-block fs-3 mb-1"></i>
+            Virer
+          </button>
+        </div>
+      </div>
+    <% } %>
+
+ <div class="d-flex gap-2 flex-wrap">
+  <a href="/historique" class="btn btn-light border shadow-sm btn-sm">
+    <i class="bi bi-clock-history"></i> Voir l'historique complet
+  </a>
+  <a href="/comptes/<%= compte.id %>/releve" class="btn btn-light border shadow-sm btn-sm">
+    <i class="bi bi-file-earmark-pdf"></i> Télécharger le relevé (PDF)
+  </a>
+</div>
+  </div>
+</div>
+
+<!-- Formulaires cachés : soumis par les popups SweetAlert2 -->
+<form id="form-depot" action="/comptes/<%= compte.id %>/depot" method="POST" class="d-none">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+  <input type="hidden" name="montant" id="depot-montant" />
+  <input type="hidden" name="libelle" id="depot-libelle" />
+</form>
+<form id="form-retrait" action="/comptes/<%= compte.id %>/retrait" method="POST" class="d-none">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+  <input type="hidden" name="montant" id="retrait-montant" />
+  <input type="hidden" name="libelle" id="retrait-libelle" />
+</form>
+<form id="form-virement" action="/comptes/<%= compte.id %>/virement" method="POST" class="d-none">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+  <input type="hidden" name="iban_destinataire" id="virement-iban" />
+  <input type="hidden" name="montant" id="virement-montant" />
+  <input type="hidden" name="libelle" id="virement-libelle" />
+</form>
+
+<div id="solde-data" data-solde="<%= compte.solde %>" hidden></div>
+
+<script>
+  const soldeActuel = parseFloat(document.getElementById('solde-data').dataset.solde);
+
+  // --- DÉPÔT ---
+  function ouvrirDepot() {
+    Swal.fire({
+      title: 'Effectuer un dépôt',
+      html:
+        '<input id="swal-montant" type="number" min="1" step="0.01" class="swal2-input" placeholder="Montant (€)">' +
+        '<input id="swal-libelle" type="text" class="swal2-input" placeholder="Libellé (optionnel)">',
+      confirmButtonText: 'Déposer',
+      confirmButtonColor: '#198754',
+      showCancelButton: true,
+      cancelButtonText: 'Annuler',
+      focusConfirm: false,
+      preConfirm: () => {
+        const montant = parseFloat(document.getElementById('swal-montant').value);
+        if (!montant || montant < 1) {
+          Swal.showValidationMessage('Le montant minimum est de 1 €.');
+          return false;
+        }
+        return { montant, libelle: document.getElementById('swal-libelle').value };
+      }
+    }).then((r) => {
+      if (r.isConfirmed) {
+        document.getElementById('depot-montant').value = r.value.montant;
+        document.getElementById('depot-libelle').value = r.value.libelle;
+        document.getElementById('form-depot').submit();
+      }
+    });
+  }
+
+  // --- RETRAIT ---
+  function ouvrirRetrait() {
+    Swal.fire({
+      title: 'Effectuer un retrait',
+      html:
+        '<input id="swal-montant" type="number" min="1" max="1000" step="0.01" class="swal2-input" placeholder="Montant (max 1000 €)">' +
+        '<input id="swal-libelle" type="text" class="swal2-input" placeholder="Libellé (optionnel)">',
+      confirmButtonText: 'Retirer',
+      confirmButtonColor: '#dc3545',
+      showCancelButton: true,
+      cancelButtonText: 'Annuler',
+      focusConfirm: false,
+      preConfirm: () => {
+        const montant = parseFloat(document.getElementById('swal-montant').value);
+        if (!montant || montant < 1) {
+          Swal.showValidationMessage('Le montant minimum est de 1 €.');
+          return false;
+        }
+        if (montant > 1000) {
+          Swal.showValidationMessage('Le montant maximum par retrait est de 1000 €.');
+          return false;
+        }
+        if (montant > soldeActuel) {
+          Swal.showValidationMessage('Solde insuffisant.');
+          return false;
+        }
+        return { montant, libelle: document.getElementById('swal-libelle').value };
+      }
+    }).then((r) => {
+      if (r.isConfirmed) {
+        document.getElementById('retrait-montant').value = r.value.montant;
+        document.getElementById('retrait-libelle').value = r.value.libelle;
+        document.getElementById('form-retrait').submit();
+      }
+    });
+  }
+
+  // --- VIREMENT ---
+  function ouvrirVirement() {
+    Swal.fire({
+      title: 'Effectuer un virement',
+      html:
+        '<input id="swal-iban" type="text" class="swal2-input" placeholder="IBAN destinataire">' +
+        '<input id="swal-montant" type="number" min="1" step="0.01" class="swal2-input" placeholder="Montant (€)">' +
+        '<input id="swal-libelle" type="text" class="swal2-input" placeholder="Libellé (optionnel)">',
+      confirmButtonText: 'Virer',
+      confirmButtonColor: '#0d6efd',
+      showCancelButton: true,
+      cancelButtonText: 'Annuler',
+      focusConfirm: false,
+      preConfirm: () => {
+        const iban = document.getElementById('swal-iban').value.trim();
+        const montant = parseFloat(document.getElementById('swal-montant').value);
+        if (!iban) {
+          Swal.showValidationMessage('L\'IBAN du destinataire est requis.');
+          return false;
+        }
+        if (!montant || montant < 1) {
+          Swal.showValidationMessage('Le montant minimum est de 1 €.');
+          return false;
+        }
+        if (montant > soldeActuel) {
+          Swal.showValidationMessage('Solde insuffisant.');
+          return false;
+        }
+        return { iban, montant, libelle: document.getElementById('swal-libelle').value };
+      }
+    }).then((r) => {
+      if (r.isConfirmed) {
+        document.getElementById('virement-iban').value = r.value.iban;
+        document.getElementById('virement-montant').value = r.value.montant;
+        document.getElementById('virement-libelle').value = r.value.libelle;
+        document.getElementById('form-virement').submit();
+      }
+    });
+  }
+</script>
