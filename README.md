@@ -116,8 +116,8 @@ L'application est accessible sur **http://localhost:3000**.
 | Rôle | Email | Mot de passe |
 |---|---|---|
 | Administrateur | `admin@ourbank.fr` | `Password1` |
-| Client | `jean.dupont@mail.fr` | `Client123` |
-| Client | `marie.martin@mail.fr` | `Client123` |
+| Client | `jean.dupont@mail.fr` | `Password1` |
+| Client | `marie.martin@mail.fr` | `Password3` |
 
 L'espace administrateur est accessible via `/admin/login`.
 
