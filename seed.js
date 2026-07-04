@@ -18,6 +18,11 @@ const mysql = require('mysql2/promise');
     'jean.dupont@mail.fr',
   ]);
 
-  console.log('✅ Mots de passe de test mis à jour (Password1)');
+  await conn.execute(
+    'UPDATE users SET is_actif = TRUE WHERE email IN (?, ?)',
+    ['admin@ourbank.fr', 'jean.dupont@mail.fr']
+  );
+
+  console.log('✅ Comptes de test réinitialisés (mot de passe : Password1, comptes actifs)');
   await conn.end();
 })();
