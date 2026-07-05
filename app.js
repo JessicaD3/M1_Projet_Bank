@@ -41,13 +41,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', require('./routes/auth'));
-app.use('/', require('./routes/client'));
-app.use('/admin', require('./routes/admin'));
-
 app.get('/', (req, res) => {
   res.render('index', { title: 'Accueil - Our Bank' });
 });
+
+app.use('/', require('./routes/auth'));
+app.use('/', require('./routes/client'));
+app.use('/admin', require('./routes/admin'));
 
 app.use((req, res) => {
   res.status(404).render('index', { title: 'Page introuvable' });
