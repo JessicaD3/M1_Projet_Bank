@@ -1,8 +1,91 @@
+<!-- HERO -->
 <div class="text-center py-5">
-  <h1 class="display-5 fw-bold">Bienvenue chez Our Bank</h1>
-  <p class="lead text-muted">Gérez vos comptes bancaires en ligne, en toute simplicité.</p>
-  <% if (!currentUser) { %>
-    <a href="/register" class="btn btn-primary btn-lg mt-3">Ouvrir un compte</a>
-    <a href="/login" class="btn btn-outline-primary btn-lg mt-3">Se connecter</a>
-  <% } %>
+  <img src="/img/ourbank-icon.svg" alt="Our Bank" style="height:88px;" class="mb-4" />
+
+  <h1 class="display-4 fw-bold mb-3">
+    Votre banque en ligne,<br>
+    <span style="background:linear-gradient(135deg,#10b981,#047857);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">simple et sécurisée</span>
+  </h1>
+
+  <p class="lead text-muted mb-4 mx-auto" style="max-width:560px;">
+    Gérez vos comptes, effectuez vos virements et suivez vos transactions
+    en toute simplicité, où que vous soyez.
+  </p>
+
+  <div class="d-flex gap-2 justify-content-center flex-wrap mb-2">
+    <a href="/register" class="btn btn-primary btn-lg px-4">
+      <i class="bi bi-person-plus"></i> Ouvrir un compte
+    </a>
+    <a href="/login" class="btn btn-light border shadow-sm btn-lg px-4">
+      <i class="bi bi-box-arrow-in-right"></i> Se connecter
+    </a>
+  </div>
+  <p class="small text-muted">
+    <i class="bi bi-shield-check text-success"></i> Connexion sécurisée · Sans frais cachés
+  </p>
+</div>
+
+<!-- ARGUMENTS -->
+<div class="row g-4 py-4">
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100 text-center">
+      <div class="card-body p-4">
+        <div class="d-inline-flex align-items-center justify-content-center mb-3"
+             style="width:60px;height:60px;border-radius:1rem;background:rgba(16,185,129,0.12);">
+          <i class="bi bi-lightning-charge-fill text-success fs-3"></i>
+        </div>
+        <h5 class="fw-bold">Rapide</h5>
+        <p class="text-muted small mb-0">
+          Ouvrez un compte en quelques secondes et effectuez vos opérations
+          instantanément, à tout moment.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100 text-center">
+      <div class="card-body p-4">
+        <div class="d-inline-flex align-items-center justify-content-center mb-3"
+             style="width:60px;height:60px;border-radius:1rem;background:rgba(16,185,129,0.12);">
+          <i class="bi bi-shield-lock-fill text-success fs-3"></i>
+        </div>
+        <h5 class="fw-bold">Sécurisé</h5>
+        <p class="text-muted small mb-0">
+          Vos données sont protégées : mots de passe chiffrés, connexion
+          sécurisée et protection contre les accès non autorisés.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100 text-center">
+      <div class="card-body p-4">
+        <div class="d-inline-flex align-items-center justify-content-center mb-3"
+             style="width:60px;height:60px;border-radius:1rem;background:rgba(16,185,129,0.12);">
+          <i class="bi bi-graph-up text-success fs-3"></i>
+        </div>
+        <h5 class="fw-bold">Transparent</h5>
+        <p class="text-muted small mb-0">
+          Suivez tous vos mouvements en temps réel et téléchargez vos relevés
+          de compte au format PDF quand vous le souhaitez.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BANDEAU TYPES DE COMPTES -->
+<div class="card shadow-sm mt-4" style="background:linear-gradient(135deg,#059669,#1c2536);">
+  <div class="card-body text-white text-center p-5">
+    <h3 class="fw-bold mb-3">Un compte adapté à chaque besoin</h3>
+    <p class="opacity-75 mb-4">Compte courant, Livret A ou PEL — choisissez le compte qui vous correspond.</p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <span class="badge bg-light text-dark fs-6 px-3 py-2">Compte courant</span>
+      <span class="badge bg-light text-dark fs-6 px-3 py-2">Livret A</span>
+      <span class="badge bg-light text-dark fs-6 px-3 py-2">PEL</span>
+    </div>
+    <a href="/register" class="btn btn-light btn-lg mt-4 px-4 fw-semibold">
+      Commencer maintenant <i class="bi bi-arrow-right"></i>
+    </a>
+  </div>
 </div>
