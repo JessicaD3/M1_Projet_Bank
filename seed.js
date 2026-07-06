@@ -12,17 +12,9 @@ const mysql = require('mysql2/promise');
 
   const hash = await bcrypt.hash('Password1', 10);
 
-  await conn.execute('UPDATE users SET password = ? WHERE email IN (?, ?)', [
-    hash,
-    'admin@ourbank.fr',
-    'jean.dupont@mail.fr',
-  ]);
+  // Réinitialise le mot de passe ET réactive TOUS les comptes
+  await conn.execute('UPDATE users SET password = ?, is_actif = TRUE', [hash]);
 
-  await conn.execute(
-    'UPDATE users SET is_actif = TRUE WHERE email IN (?, ?)',
-    ['admin@ourbank.fr', 'jean.dupont@mail.fr']
-  );
-
-  console.log('✅ Comptes de test réinitialisés (mot de passe : Password1, comptes actifs)');
+  console.log('✅ Tous les comptes réinitialisés (mot de passe : Password1, comptes actifs)');
   await conn.end();
 })();
