@@ -10,11 +10,24 @@
       </div>
 
         <% if (inactif) { %>
-          <div class="alert alert-warning d-flex align-items-center" role="alert">
-            <i class="bi bi-clock-history me-2"></i>
-            <span class="small">Vous avez été déconnecté pour inactivité. Merci de vous reconnecter.</span>
-          </div>
-        <% } %>
+          <div id="alerte-inactif" class="alert alert-warning d-flex align-items-center" role="alert"
+               style="transition: opacity 0.6 ease;">
+              <i class="bi bi-clock-history me-2"></i>
+        <span class="small">Vous avez été déconnecté pour inactivité. Merci de vous reconnecter.</span>
+      </div>
+      <script>
+        (function () {
+          const alerte = document.getElementById('alerte-inactif');
+          if (window.history.replaceState) {
+            window.history.replaceState(null, '', '/login');
+          }
+          setTimeout(function () {
+            alerte.style.opacity = '0';
+            setTimeout(function () { alerte.remove(); }, 600);
+          }, 6000);
+        })();
+      </script>
+    <% } %>
 
         <form action="/login" method="POST">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
