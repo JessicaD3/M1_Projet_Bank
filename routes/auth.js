@@ -8,8 +8,8 @@ const { csrfProtection } = require('../middleware/csrf');
 const { redirectIfAuth } = require('../middleware/auth');
 
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5,
+  windowMs: 1 * 60 * 1000, // 15 minutes
+  max: 3,
   standardHeaders: true,
   legacyHeaders: false,
   // Rendu d'une page stylée au lieu du message brut
