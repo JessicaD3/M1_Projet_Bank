@@ -12,6 +12,7 @@ CREATE TABLE users (
     date_naissance  DATE,
     password        VARCHAR(255) NOT NULL,
     is_admin        BOOLEAN NOT NULL DEFAULT FALSE,
+    is_actif        BOOLEAN NOT NULL DEFAULT TRUE,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -41,7 +42,7 @@ CREATE TABLE transactions (
         REFERENCES comptes_bancaires(id) ON DELETE SET NULL
 );
 
-INSERT INTO users (nom, prenom, email, telephone, adresse, date_naissance, password, is_admin)
+INSERT INTO users (nom, prenom, email, telephone, adresse, date_naissance, password, is_admin, is_actif)
 VALUES
-('Admin', 'Super', 'admin@ourbank.fr', '0600000000', '1 rue de la Banque, Paris', '1990-01-01', 'A_REMPLACER', TRUE),
-('Dupont', 'Jean', 'jean.dupont@mail.fr', '0611111111', '12 rue Victor Hugo, Lyon', '1995-06-15', 'A_REMPLACER', FALSE);
+('Admin', 'Super', 'admin@ourbank.fr', '0600000000', '1 rue de la Banque, Paris', '1990-01-01', 'A_REMPLACER', TRUE, TRUE),
+('Dupont', 'Jean', 'jean.dupont@mail.fr', '0611111111', '12 rue Victor Hugo, Lyon', '1995-06-15', 'A_REMPLACER', FALSE, TRUE);
