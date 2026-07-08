@@ -80,6 +80,7 @@
 </form>
 
 <div id="solde-data" data-solde="<%= compte.solde %>" hidden></div>
+<div id="comptes-data" data-comptes="<%= encodeURIComponent(JSON.stringify(autresComptes)) %>" hidden></div>
 
 <script>
   const soldeActuel = parseFloat(document.getElementById('solde-data').dataset.solde);
@@ -150,24 +151,81 @@
     });
   }
 
+  const mesComptes = JSON.parse(decodeURIComponent(document.getElementById('comptes-data').dataset.comptes));
+  const labelsType = { courant: 'Compte courant', livret_a: 'Livret A', pel: 'PEL' };
+
   // --- VIREMENT ---
   function ouvrirVirement() {
+    let optionsComptes = '<option value="">— Choisir un de mes comptes —</option>';
+    mesComptes.forEach(function (c) {
+      const label = (labelsType[c.type_compte] || c.type_compte) + ' — ' +
+        parseFloat(c.solde).toFixed(2) + ' € (' + c.numero_compte + ')';
+      optionsComptes += '<option value="' + c.numero_compte + '">' + label + '</option>';
+    });
+
     Swal.fire({
       title: 'Effectuer un virement',
       html:
-        '<input id="swal-iban" type="text" class="swal2-input" placeholder="IBAN destinataire">' +
-        '<input id="swal-montant" type="number" min="1" step="0.01" class="swal2-input" placeholder="Montant (€)">' +
-        '<input id="swal-libelle" type="text" class="swal2-input" placeholder="Libellé (optionnel)">',
+        '<div style="text-align:left;font-size:0.9rem;">' +
+        '<label style="font-weight:600;">Vers un de mes comptes</label>' +
+        '<select id="swal-mescomptes" class="swal2-select" style="width:100%;margin:6px 0 14px;">' + optionsComptes + '</select>' +
+        '<div style="text-align:center;color:#94a3b8;margin-bottom:10px;">— ou —</div>' +
+        '<label style="font-weight:600;">Vers un IBAN externe</label>' +
+        '<input id="swal-iban" class="swal2-input" placeholder="FR76-YBNK..." style="margin:6px 0;">' +
+        '<div id="swal-iban-check" style="min-height:20px;font-size:0.85rem;margin-bottom:8px;"></div>' +
+        '<label style="font-weight:600;">Montant (€)</label>' +
+        '<input id="swal-montant" type="number" min="1" step="0.01" class="swal2-input" placeholder="Montant" style="margin:6px 0;">' +
+        '<input id="swal-libelle" type="text" class="swal2-input" placeholder="Libellé (optionnel)" style="margin:6px 0;">' +
+        '</div>',
       confirmButtonText: 'Virer',
-      confirmButtonColor: '#0d6efd',
+      confirmButtonColor: '#059669',
       showCancelButton: true,
       cancelButtonText: 'Annuler',
       focusConfirm: false,
+      didOpen: () => {
+        const selectComptes = document.getElementById('swal-mescomptes');
+        const inputIban = document.getElementById('swal-iban');
+        const zoneCheck = document.getElementById('swal-iban-check');
+
+        selectComptes.addEventListener('change', () => {
+          if (selectComptes.value) { inputIban.value = ''; zoneCheck.innerHTML = ''; }
+        });
+
+        let timer;
+        inputIban.addEventListener('input', () => {
+          selectComptes.value = '';
+          const iban = inputIban.value.trim();
+          zoneCheck.innerHTML = '';
+          clearTimeout(timer);
+          if (iban.length < 10) return;
+          timer = setTimeout(() => {
+            fetch('/verifier-iban', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: '_csrf=' + encodeURIComponent('<%= csrfToken %>') + '&iban=' + encodeURIComponent(iban),
+            })
+              .then(r => r.json())
+              .then(data => {
+                if (data.ok) {
+                  zoneCheck.innerHTML = '<span style="color:#059669;">✓ Bénéficiaire : <strong>' + data.titulaire + '</strong>' + (data.estMien ? ' (vous)' : '') + '</span>';
+                } else if (data.raison === 'indisponible') {
+                  zoneCheck.innerHTML = '<span style="color:#dc2626;">✕ Ce compte est indisponible (bloqué ou clôturé).</span>';
+                } else {
+                  zoneCheck.innerHTML = '<span style="color:#dc2626;">✕ IBAN introuvable.</span>';
+                }
+              })
+              .catch(() => { zoneCheck.innerHTML = ''; });
+          }, 400);
+        });
+      },
       preConfirm: () => {
-        const iban = document.getElementById('swal-iban').value.trim();
+        const compteChoisi = document.getElementById('swal-mescomptes').value;
+        const ibanSaisi = document.getElementById('swal-iban').value.trim();
+        const iban = compteChoisi || ibanSaisi;
         const montant = parseFloat(document.getElementById('swal-montant').value);
+
         if (!iban) {
-          Swal.showValidationMessage('L\'IBAN du destinataire est requis.');
+          Swal.showValidationMessage('Choisissez un compte ou saisissez un IBAN.');
           return false;
         }
         if (!montant || montant < 1) {

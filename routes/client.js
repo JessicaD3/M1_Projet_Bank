@@ -120,7 +120,18 @@ router.get('/comptes/:id', async (req, res) => {
       req.flash('error', "Compte introuvable ou non autorisé.");
       return res.redirect('/comptes');
     }
-    res.render('client/compte-detail', { title: 'Détail du compte', compte: rows[0] });
+    const [autresComptes] = await db.execute(
+      `SELECT id, numero_compte, type_compte, solde
+       FROM comptes_bancaires
+       WHERE user_id = ? AND id <> ? AND statut = 'actif'
+       ORDER BY type_compte`,
+      [req.session.user.id, req.params.id]
+    );
+    res.render('client/compte-detail', {
+      title: 'Détail du compte',
+      compte: rows[0],
+      autresComptes,
+    });
   } catch (err) {
     console.error(err);
     req.flash('error', 'Erreur.');
@@ -442,6 +453,33 @@ router.get('/historique', async (req, res) => {
     console.error(err);
     req.flash('error', "Erreur lors du chargement de l'historique.");
     res.redirect('/dashboard');
+  }
+});
+
+// ===================== VÉRIFIER UN IBAN (AJAX, pour le virement) =====================
+router.post('/verifier-iban', csrfProtection, async (req, res) => {
+  const iban = (req.body.iban || '').trim();
+  if (!iban) return res.json({ ok: false });
+  try {
+    const [rows] = await db.execute(
+      `SELECT c.id, c.statut, c.user_id, u.prenom, u.nom, u.is_actif
+       FROM comptes_bancaires c
+       JOIN users u ON c.user_id = u.id
+       WHERE c.numero_compte = ?`,
+      [iban]
+    );
+    if (rows.length === 0) return res.json({ ok: false, raison: 'introuvable' });
+
+    const compte = rows[0];
+    if (compte.statut === 'bloque' || compte.is_actif === 0) {
+      return res.json({ ok: false, raison: 'indisponible' });
+    }
+    const nomMasque = `${compte.prenom} ${compte.nom ? compte.nom[0] + '.' : ''}`;
+    const estMien = compte.user_id === req.session.user.id;
+    res.json({ ok: true, titulaire: nomMasque, estMien });
+  } catch (err) {
+    console.error(err);
+    res.json({ ok: false });
   }
 });
 
